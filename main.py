@@ -1,7 +1,13 @@
 import speech_recognition as sr
 from gtts import gTTS
 import os
+import requests
 
+def joke():
+    x = requests.get('https://icanhazdadjoke.com/slack')
+    response = x.json()
+
+    return response["attachments"][0]["text"]
 
 def takecom():
     r = sr.Recognizer()
@@ -12,7 +18,9 @@ def takecom():
         print("Recognising....") 
         text = r.recognize_google(audio,language='en-in')
         if text == "yes":
-            print('Cool')
+            joke = gTTS(joke(), lang='en', tld="com.au")
+            joke.save('audio/joke.mp3')
+            os.system("mpg123 " + "audio/welcome.mp3")
         else:
             print('Sorry i didnt hear that')
     except Exception:      
@@ -24,7 +32,6 @@ def ask():
     welcome = gTTS('hello dear user, do you want to listen to a joke?', lang='en', tld="com.au")
     welcome.save('audio/welcome.mp3')
     os.system("mpg123 " + "audio/welcome.mp3")
-
     takecom()
 
 ask()
