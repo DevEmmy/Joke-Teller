@@ -14,19 +14,20 @@ def takecom():
     with sr.Microphone() as source:
         print("Listning....")
         audio = r.listen(source)
-    try:
         print("Recognising....") 
         text = r.recognize_google(audio,language='en-in')
+        print(text)
         if text == "yes":
-            joke = gTTS(joke(), lang='en', tld="com.au")
+            print(text)
+            x = requests.get('https://icanhazdadjoke.com/slack')
+            response = x.json()
+
+            joke = response["attachments"][0]["text"]
+            joke = gTTS(joke, lang='en', tld="com.au")
             joke.save('audio/joke.mp3')
-            os.system("mpg123 " + "audio/welcome.mp3")
+            os.system("mpg123 " + "audio/joke.mp3")
         else:
             print('Sorry i didnt hear that')
-    except Exception:      
-        print("Network connection error") 
-        return "none"
-    return text
 
 def ask():
     welcome = gTTS('hello dear user, do you want to listen to a joke?', lang='en', tld="com.au")
